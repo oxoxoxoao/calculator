@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attack Speed Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .calculator-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        select, input[type="number"] {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #result, #tips {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Attack Speed Calculator</h1>
+    <form id="attackSpeedForm" class="calculator-form">
+        <div>
+            <label for="hunterType">Select Hunter's Type:</label>
+            <select id="hunterType" name="hunterType" required>
+                <option value="berserker">Berserker</option>
+                <option value="sorcerer">Sorcerer</option>
+                <option value="ranger">Ranger</option>
+                <option value="paladin">Paladin</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="weaponType">Select Weapon Type:</label>
+            <select id="weaponType" name="weaponType" required>
+                <option value="pvp">PVP/World Boss</option>
+                <option value="primal">Ancient/Primal/Origin</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="furyLevel">Fury (Berserkers: 1-13, Sorcerers: 1 with Immortal):</label>
+            <input type="number" id="furyLevel" name="furyLevel" min="0" max="13" value="0" required>
+        </div>
+
+        <div>
+            <label for="guildBuff">Guild ATK SPD Buff (%):</label>
+            <select id="guildBuff" name="guildBuff" required>
+                <option value="0">0</option>
+                <option value="1">1%</option>
+                <option value="2">2%</option>
+                <option value="3">3%</option>
+                <option value="4">4%</option>
+                <option value="5">5%</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="secretTech">Secret Tech ATK SPD % (Lv100: 10%):</label>
+            <input type="number" id="secretTech" name="secretTech" min="0" step="0.1" value="0">
+        </div>
+
+        <div>
+            <label for="equipmentBonus">Equipment Bonus % + ATK SPD Rune %:</label>
+            <input type="number" id="equipmentBonus" name="equipmentBonus" min="0" step="0.1" value="0">
+        </div>
+
+        <div>
+            <label for="hunterstats">Hunter Stat:</label>
+            <select id="hunterstats" name="hunterstats" required>
+                <option value="0">White</option>
+                <option value="10">Blue (10%)</option>
+                <option value="20">Orange (20%)</option>
+                <option value="30">Purple (30%)</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="hunterCharacteristic">Hunter's Characteristic:</label>
+            <select id="hunterCharacteristic" name="hunterCharacteristic">
+                <option value="0">None</option>
+                <option value="7">Heroic (7%)</option>
+                <option value="10">Swift (10%)</option>
+                <option value="-10">Thickheader (-10%)</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="quickenTrait">Hunter's Quicken Trait:</label>
+            <select id="quickenTrait" name="quickenTrait">
+                <option value="1.0">0</option>
+                <option value="1.1">1</option>
+                <option value="1.2">2</option>
+                <option value="1.3">3</option>
+                <option value="1.4">4</option>
+                <option value="1.5">5</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="mountEquipTier">Mount Equip Tier:</label>
+            <select id="mountEquipTier" name="mountEquipTier">
+                <option value="0">None</option>
+                <option value="6">Tier B</option>
+                <option value="9">Tier A</option>
+                <option value="12">Tier S</option>
+            </select>
+        </div>
+    </form>
+
+    <div id="result">Enter values to see the calculated attack speed.</div>
+    <div id="tips">Calculating additional % needed for 0.25 attack speed...</div>
+
+    <script type="text/javascript">
+        // Base attack speed values
+        const baseAttackSpeeds = {
+            berserker: { pvp: 2.20, primal: 2.00 },
+            paladin: { pvp: 2.50, primal: 2.40 },
+            ranger: { pvp: 2.00, primal: 1.80 },
+            sorcerer: { pvp: 2.30, primal: 2.20 }
+        };
+
+        // Function to calculate attack speed and tips
+        function calculateAttackSpeed() {
+            try {
+                // Get form values
+                const hunterType = document.getElementById('hunterType').value;
+                const weaponType = document.getElementById('weaponType').value;
+                const guildBuff = parseFloat(document.getElementById('guildBuff').value);
+                const secretTech = parseFloat(document.getElementById('secretTech').value);
+                const equipmentBonus = parseFloat(document.getElementById('equipmentBonus').value);
+                const hunterStats = parseFloat(document.getElementById('hunterstats').value);
+                const hunterCharacteristic = parseFloat(document.getElementById('hunterCharacteristic').value);
+                const quickenTrait = parseFloat(document.getElementById('quickenTrait').value);
+                const mountEquipTier = parseFloat(document.getElementById('mountEquipTier').value);
+
+                // Validate inputs
+                if (isNaN(guildBuff) || isNaN(secretTech) || isNaN(equipmentBonus) || 
+                    isNaN(hunterStats) || isNaN(hunterCharacteristic) || isNaN(quickenTrait) || 
+                    isNaN(mountEquipTier)) {
+                    document.getElementById('result').textContent = 
+                        'Error: Please ensure all inputs are valid numbers.';
+                    document.getElementById('tips').textContent = 
+                        'Tips: Unable to calculate due to invalid inputs.';
+                    return;
+                }
+
+                // Validate quickenTrait to avoid division by zero
+                if (quickenTrait === 0) {
+                    document.getElementById('result').textContent = 
+                        'Error: Quicken Trait cannot be zero.';
+                    document.getElementById('tips').textContent = 
+                        'Tips: Unable to calculate due to invalid Quicken Trait.';
+                    return;
+                }
+
+                // Get base attack speed
+                const baseAttackSpeed = baseAttackSpeeds[hunterType]?.[weaponType];
+                if (!baseAttackSpeed) {
+                    document.getElementById('result').textContent = 
+                        'Error: Invalid hunter type or weapon type.';
+                    document.getElementById('tips').textContent = 
+                        'Tips: Unable to calculate due to invalid hunter or weapon type.';
+                    return;
+                }
+
+                // Calculate current attack speed
+                const totalBonusPercent = guildBuff + secretTech + equipmentBonus + 
+                    hunterStats + hunterCharacteristic + mountEquipTier;
+                const totalBonusDecimal = 1 - (totalBonusPercent / 100);
+                const attackSpeed = (baseAttackSpeed * totalBonusDecimal) / quickenTrait;
+
+                // Validate result
+                if (isNaN(attackSpeed) || !isFinite(attackSpeed)) {
+                    document.getElementById('result').textContent = 
+                        'Error: Invalid calculation result. Check your inputs.';
+                    document.getElementById('tips').textContent = 
+                        'Tips: Unable to calculate due to invalid result.';
+                    return;
+                }
+
+                // Display current attack speed
+                document.getElementById('result').textContent = 
+                    `Calculated Attack Speed: ${attackSpeed.toFixed(2)}`;
+
+                // Calculate additional % needed or to remove for attack speed of 0.25
+                const targetAttackSpeed = 0.25;
+                const requiredTotalBonusPercent = 100 * (1 - (targetAttackSpeed * quickenTrait) / baseAttackSpeed);
+                const otherBonuses = guildBuff + secretTech + hunterStats + hunterCharacteristic + mountEquipTier;
+
+                // Handle edge cases for tips
+                let tipsMessage;
+                if (isNaN(requiredTotalBonusPercent) || !isFinite(requiredTotalBonusPercent)) {
+                    tipsMessage = 'Tips: Unable to achieve 0.25 attack speed with current settings.';
+                } else if (attackSpeed <= targetAttackSpeed) {
+                    // Calculate current totalBonusPercent
+                    const currentTotalBonusPercent = 100 * (1 - (attackSpeed * quickenTrait) / baseAttackSpeed);
+                    const removeEquipmentBonus = currentTotalBonusPercent - requiredTotalBonusPercent;
+                    if (Math.abs(removeEquipmentBonus) < 0.1) {
+                        tipsMessage = 'Tips: Current settings achieve an attack speed very close to 0.25.';
+                    } else {
+                        tipsMessage = `Reduce Equipment Bonus by ${removeEquipmentBonus.toFixed(1)}%, you already reached the max cap of 0.25 attack speed.`;
+                    }
+                } else {
+                    const additionalEquipmentBonus = requiredTotalBonusPercent - otherBonuses;
+                    if (additionalEquipmentBonus < 0.1) {
+                        tipsMessage = 'Tips: Increase Equipment Bonus by less than 0.1% to achieve 0.25 attack speed.';
+                    } else {
+                        tipsMessage = `Tips: Increase Equipment Bonus by ${additionalEquipmentBonus.toFixed(1)}% to achieve 0.25 attack speed.`;
+                    }
+                }
+
+                document.getElementById('tips').textContent = tipsMessage;
+            } catch (error) {
+                console.error('Calculation error:', error);
+                document.getElementById('result').textContent = 
+                    'Error: An unexpected error occurred. Please check your inputs.';
+                document.getElementById('tips').textContent = 
+                    'Tips: Unable to calculate due to an unexpected error.';
+            }
+        }
+
+        // Recalculate on input change
+        const inputs = document.querySelectorAll('#attackSpeedForm input, #attackSpeedForm select');
+        inputs.forEach(input => {
+            input.addEventListener('change', calculateAttackSpeed);
+        });
+
+        // Initial calculation with default values
+        calculateAttackSpeed();
+    </script>
+</body>
+</html>
