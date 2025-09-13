@@ -6,47 +6,102 @@
     <title>Attack Speed Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #1a2a44 0%, #2e4a7d 100%);
+            color: #ffffff;
+            background-image: url('https://i.ytimg.com/vi/qH_aWVszvcg/maxresdefault.jpg');
+            background-size: cover;
+  background-position: center;
+        }
+        .discord-link {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .discord-link a {
+            color: #7289da;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #7289da;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+			background-color: #7289da;
+  color: white;
+        }
+        .discord-link a:hover {
+            background-color: #7289da;
+            color: black;
         }
         .calculator-form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            background-color: white;
+        
+            background-color: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 28px;
         }
         label {
             font-weight: bold;
             margin-bottom: 5px;
+            color: #1a2a44;
         }
         select, input[type="number"] {
-            padding: 8px;
+            padding: 10px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #4a6ba1;
+            border-radius: 5px;
             width: 100%;
             box-sizing: border-box;
+            background-color: #f0f4f8;
+            transition: border-color 0.3s;
+        }
+        select:focus, input[type="number"]:focus {
+            border-color: #7289da;
+            outline: none;
         }
         #result, #tips {
             margin-top: 20px;
             font-size: 18px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
+            padding: 15px;
+            background-color: #e9f0fa;
+            border-radius: 5px;
+            color: #1a2a44;
+            border: 1px solid #4a6ba1;
         }
         .error {
-            color: red;
+            color: #e74c3c;
             font-size: 14px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4a6ba1;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #7289da;
         }
     </style>
 </head>
 <body>
+    <div class="discord-link">
+        <a href="https://discord.gg/z9CQtZWV" target="_blank">Join Discord Oxo</a>
+    </div>
     <h1>Attack Speed Calculator</h1>
     <form id="attackSpeedForm" class="calculator-form">
         <div>
