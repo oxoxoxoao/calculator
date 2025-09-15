@@ -1,317 +1,466 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Attack Speed Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a2a44 0%, #2e4a7d 100%);
-            color: #ffffff;
-            background-image: url('https://i.ytimg.com/vi/qH_aWVszvcg/maxresdefault.jpg');
-            background-size: cover;
-  background-position: center;
-        }
         .discord-link {
             text-align: center;
-            margin-bottom: 20px;
         }
         .discord-link a {
-            color: #7289da;
-            font-size: 18px;
+            font-size: 11px;
             font-weight: bold;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 4px 10px;
             border: 2px solid #7289da;
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
-			background-color: #7289da;
-  color: white;
-        }
-        .discord-link a:hover {
             background-color: #7289da;
-            color: black;
+            color: white;
         }
-        .calculator-form {
-            display: flex;
-            flex-direction: column;
-        
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        i {
+            color: #ff5b5b;
         }
-        h1 {
-            color: #ffffff;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            font-size: 28px;
-        }
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #1a2a44;
-        }
-        select, input[type="number"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #4a6ba1;
-            border-radius: 5px;
-            width: 100%;
-            box-sizing: border-box;
-            background-color: #f0f4f8;
-            transition: border-color 0.3s;
-        }
-        select:focus, input[type="number"]:focus {
-            border-color: #7289da;
-            outline: none;
-        }
-        #result, #tips {
-            margin-top: 20px;
-            font-size: 18px;
-            padding: 15px;
-            background-color: #e9f0fa;
-            border-radius: 5px;
-            color: #1a2a44;
-            border: 1px solid #4a6ba1;
-        }
-        .error {
-            color: #e74c3c;
-            font-size: 14px;
-        }
-        button {
-            padding: 10px;
-            font-size: 16px;
-            background-color: #4a6ba1;
-            color: #ffffff;
+        .btn-group .btn {
+            margin-right: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            color: #fff;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: #4c4b59;
         }
-        button:hover {
-            background-color: #7289da;
+        .btn-group .btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn-group .btn.active {
+            background: white !important;
+            color: #2c2b3a !important;
+        }
+        .btn-group {
+            margin-top: 2%;
+        }
+        #container {
+            border-top: 1px solid black;
+            position: relative;
+        }
+        #label {
+            position: absolute;
+            top: -15px;
+            height: 20px;
+            width: auto;
+            background-color: #2c2b3a !important;
+            padding-right: 2%;
+        }
+        input[type="number"] {
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+        .number-input {
+            border: 2px solid #ddd;
+            display: inline-flex;
+        }
+        .number-input,
+        .number-input * {
+            box-sizing: border-box;
+        }
+        .number-input button {
+            outline: none;
+            -webkit-appearance: none;
+            background-color: transparent;
+            border: none;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            cursor: pointer;
+            margin: 0;
+            position: relative;
+        }
+        .number-input button:before,
+        .number-input button:after {
+            display: inline-block;
+            position: absolute;
+            content: '';
+            width: 1rem;
+            height: 2px;
+            background-color: white;
+            transform: translate(-50%, -50%);
+        }
+        .number-input button.plus:after {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+        .number-input input[type=number] {
+            font-family: sans-serif;
+            max-width: 5rem;
+            padding: .5rem;
+            border: solid #ddd;
+            border-width: 0 2px;
+            font-size: 1rem;
+            height: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        body {
+            font-size: medium;
+            background-color: #2c2b3a;
+            color: #1f81e2;
+        }
+        .calculator-card {
+            max-width: 503px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            background-color: #3c3b4a;
+            color: #1f81e2;
+            margin-top: 0;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #f4a261;
+        }
+        .btn-berserker { background-color: #f4a261; }
+        .btn-paladin { background-color: #89c2d9; }
+        .btn-ranger { background-color: #6d8b74; }
+        .btn-sorcerer { background-color: #b5838d; }
+        .btn-weapon-pvp { background-color: #6c757d; }
+        .btn-weapon-ancient { background-color: #adb5bd; }
+        .btn-fury-0 { background-color: #6c757d; }
+        .btn-fury-1 { background-color: #adb5bd; }
+        .btn-fury-2 { background-color: #6c757d; }
+        .btn-fury-3 { background-color: #adb5bd; }
+        .btn-fury-4 { background-color: #6c757d; }
+        .btn-fury-5 { background-color: #adb5bd; }
+        .btn-stat-0 { background-color: #ffffff; color: #000; }
+        .btn-stat-10 { background-color: #87ceeb; }
+        .btn-stat-20 { background-color: #ffa500; }
+        .btn-stat-30 { background-color: #800080; color: #fff; }
+        .btn-char-0 { background-color: #6c757d; }
+        .btn-char-7 { background-color: #adb5bd; }
+        .btn-char-10 { background-color: #6c757d; }
+        .btn-char--10 { background-color: #adb5bd; }
+        .btn-quick-1 { background-color: #6c757d; }
+        .btn-quick-1_1 { background-color: #adb5bd; }
+        .btn-quick-1_2 { background-color: #6c757d; }
+        .btn-quick-1_3 { background-color: #adb5bd; }
+        .btn-quick-1_4 { background-color: #6c757d; }
+        .btn-quick-1_5 { background-color: #adb5bd; }
+        .btn-mount-0 { background-color: #6c757d; }
+        .btn-mount-6 { background-color: #adb5bd; }
+        .btn-mount-9 { background-color: #6c757d; }
+        .btn-mount-12 { background-color: #adb5bd; }
+        .result-card {
+            background-color: #3c3b4a;
+            padding: 1rem;
+            border-radius: 8px;
+            color: white;
+        }
+        h4 {
+            color: #f4a261;
+            text-align: center;
+        }
+        .btn:disabled {
+            background: red;
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+        .bg-light {
+            background-color: #2c2b3a !important;
         }
     </style>
-</head>
-<body>
-    <div class="discord-link">
-        <a href="https://discord.gg/z9CQtZWV" target="_blank">Join Discord OXO</a>
-    </div>
-    <h1>Attack Speed Calculator</h1>
-    <form id="attackSpeedForm" class="calculator-form">
-        <div>
-            <label for="hunterType">Select Hunter's Type:</label>
-            <select id="hunterType" name="hunterType" required>
-                <option value="berserker">Berserker</option>
-                <option value="sorcerer">Sorcerer</option>
-                <option value="ranger">Ranger</option>
-                <option value="paladin">Paladin</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="weaponType">Select Weapon Type:</label>
-            <select id="weaponType" name="weaponType" required>
-                <option value="pvp">PVP/World Boss</option>
-                <option value="primal">Ancient/Primal/Origin</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="furyLevel">Fury (Berserkers: 1-13, Sorcerers: 1 with Immortal):</label>
-            <input type="number" id="furyLevel" name="furyLevel" min="0" max="13" value="0" required>
-        </div>
-
-        <div>
-            <label for="guildBuff">Guild ATK SPD Buff (%):</label>
-            <select id="guildBuff" name="guildBuff" required>
-                <option value="0">0</option>
-                <option value="1">1%</option>
-                <option value="2">2%</option>
-                <option value="3">3%</option>
-                <option value="4">4%</option>
-                <option value="5">5%</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="secretTech">Secret Tech ATK SPD % (Lv100: 10%):</label>
-            <input type="number" id="secretTech" name="secretTech" min="0" step="0.1" value="0">
-        </div>
-
-        <div>
-            <label for="equipmentBonus">Equipment Bonus % + ATK SPD Rune %:</label>
-            <input type="number" id="equipmentBonus" name="equipmentBonus" min="0" step="0.1" value="0">
-        </div>
-
-        <div>
-            <label for="hunterstats">Hunter Stat:</label>
-            <select id="hunterstats" name="hunterstats" required>
-                <option value="0">White</option>
-                <option value="10">Blue (10%)</option>
-                <option value="20">Orange (20%)</option>
-                <option value="30">Purple (30%)</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="hunterCharacteristic">Hunter's Characteristic:</label>
-            <select id="hunterCharacteristic" name="hunterCharacteristic">
-                <option value="0">None</option>
-                <option value="7">Heroic (7%)</option>
-                <option value="10">Swift (10%)</option>
-                <option value="-10">Thickheader (-10%)</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="quickenTrait">Hunter's Quicken Trait:</label>
-            <select id="quickenTrait" name="quickenTrait">
-                <option value="1.0">0</option>
-                <option value="1.1">1</option>
-                <option value="1.2">2</option>
-                <option value="1.3">3</option>
-                <option value="1.4">4</option>
-                <option value="1.5">5</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="mountEquipTier">Mount Equip Tier:</label>
-            <select id="mountEquipTier" name="mountEquipTier">
-                <option value="0">None</option>
-                <option value="6">Tier B (6%)</option>
-                <option value="9">Tier A (9%)</option>
-                <option value="12">Tier S (12%)</option>
-            </select>
-        </div>
-    </form>
-
-    <div id="result">Enter values to see the calculated attack speed.</div>
-    <div id="tips">Calculating additional % needed for 0.25 attack speed...</div>
-
     <script type="text/javascript">
-        // Base attack speed values
-        const baseAttackSpeeds = {
-            berserker: { pvp: 2.20, primal: 2.00 },
-            paladin: { pvp: 2.50, primal: 2.40 },
-            ranger: { pvp: 2.00, primal: 1.80 },
-            sorcerer: { pvp: 2.30, primal: 2.20 }
-        };
+        function getWanderingTraderTimes() {
+            const utcHours = new Date().getUTCHours();
+            const times = [{ start: 4, end: 7 }, { start: 12, end: 15 }, { start: 20, end: 23 }];
+            const currentTime = times.find(({ start, end }) => utcHours >= start && utcHours < end);
+            if (currentTime) {
+                document.getElementById("active_now").innerHTML = "The Wandering Trader is ACTIVE NOW!!!";
+            }
+            const nextStartHour = times.find(({ start }) => utcHours < start)?.start;
+            const nextDate = new Date();
+            nextDate.setUTCHours(nextStartHour || 4);
+            nextDate.setUTCMinutes(0);
+            nextDate.setUTCSeconds(0);
+            document.getElementById("estimate").innerHTML = "The next Wandering Trader times will be at: " + nextDate.toLocaleTimeString() + " local time!";
+        }
 
-        // Function to calculate attack speed and tips
-        function calculateAttackSpeed() {
-            try {
-                // Get form values
-                const hunterType = document.getElementById('hunterType').value;
-                const weaponType = document.getElementById('weaponType').value;
-                const guildBuff = parseFloat(document.getElementById('guildBuff').value);
-                const secretTech = parseFloat(document.getElementById('secretTech').value);
-                const equipmentBonus = parseFloat(document.getElementById('equipmentBonus').value);
-                const hunterStats = parseFloat(document.getElementById('hunterstats').value);
-                const hunterCharacteristic = parseFloat(document.getElementById('hunterCharacteristic').value);
-                const quickenTrait = parseFloat(document.getElementById('quickenTrait').value);
-                const mountEquipTier = parseFloat(document.getElementById('mountEquipTier').value);
+        function calculateTime(date1, date2) {
+            let sec = Math.floor((date1 - date2) / 1000);
+            let min = Math.floor(sec / 60);
+            let hrs = Math.floor(min / 60);
+            let days = Math.floor(hrs / 24);
+            hrs = hrs - (days * 24);
+            min = min - (days * 24 * 60) - (hrs * 60);
+            sec = sec - (days * 24 * 60 * 60) - (hrs * 60 * 60) - (min * 60);
+            return hrs + " hrs, " + min + " mins, and " + sec + " seconds";
+        }
 
-                // Validate inputs
-                if (isNaN(guildBuff) || isNaN(secretTech) || isNaN(equipmentBonus) || 
-                    isNaN(hunterStats) || isNaN(hunterCharacteristic) || isNaN(quickenTrait) || 
-                    isNaN(mountEquipTier)) {
-                    document.getElementById('result').textContent = 
-                        'Error: Please ensure all inputs are valid numbers.';
-                    document.getElementById('tips').textContent = 
-                        'Tips: Unable to calculate due to invalid inputs.';
-                    return;
+        function submitCalc() {
+            document.getElementById("eCalc").submit();
+        }
+
+        function calcATKSPD() {
+            var lookUp = {
+                berserker: {
+                    ancient: { atk: 83916, spd: 2.00 },
+                    primal: { atk: 109188, spd: 2.00 },
+                    pvp: { atk: 110840, spd: 2.20 },
+                    pvpult: { atk: 1, spd: 2.20 },
+                    wb: { atk: 1, spd: 2.20 }
+                },
+                sorcerer: {
+                    ancient: { atk: 92308, spd: 2.20 },
+                    primal: { atk: 120107, spd: 2.20 },
+                    pvp: { atk: 115879, spd: 2.30 },
+                    pvpult: { atk: 1, spd: 2.30 },
+                    wb: { atk: 1, spd: 2.30 }
+                },
+                ranger: {
+                    ancient: { atk: 75524, spd: 1.80 },
+                    primal: { atk: 98269, spd: 1.80 },
+                    pvp: { atk: 100764, spd: 2.00 },
+                    pvpult: { atk: 1, spd: 2.00 },
+                    wb: { atk: 1, spd: 2.00 }
+                },
+                paladin: {
+                    ancient: { atk: 100699, spd: 2.40 },
+                    primal: { atk: 131026, spd: 2.40 },
+                    pvp: { atk: 125995, spd: 2.50 },
+                    pvpult: { atk: 1, spd: 2.50 },
+                    wb: { atk: 1, spd: 2.50 }
                 }
-
-                // Validate quickenTrait to avoid division by zero
-                if (quickenTrait === 0) {
-                    document.getElementById('result').textContent = 
-                        'Error: Quicken Trait cannot be zero.';
-                    document.getElementById('tips').textContent = 
-                        'Tips: Unable to calculate due to invalid Quicken Trait.';
-                    return;
+            };
+            const hunterButtons = document.querySelectorAll('.hunter-btn-group .btn');
+            let h_type = 'berserker';
+            hunterButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    h_type = btn.getAttribute('data-type');
                 }
-
-                // Get base attack speed
-                const baseAttackSpeed = baseAttackSpeeds[hunterType]?.[weaponType];
-                if (!baseAttackSpeed) {
-                    document.getElementById('result').textContent = 
-                        'Error: Invalid hunter type or weapon type.';
-                    document.getElementById('tips').textContent = 
-                        'Tips: Unable to calculate due to invalid hunter or weapon type.';
-                    return;
+            });
+            const weaponButtons = document.querySelectorAll('.weapon-btn-group .btn');
+            let hw_type = 'pvp';
+            weaponButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    hw_type = btn.getAttribute('data-type');
                 }
-
-                // Calculate current attack speed
-                const totalBonusPercent = guildBuff + secretTech + equipmentBonus + 
-                    hunterStats + hunterCharacteristic + mountEquipTier;
-                const totalBonusDecimal = 1 - (totalBonusPercent / 100);
-                const attackSpeed = (baseAttackSpeed * totalBonusDecimal) / quickenTrait;
-
-                // Validate result
-                if (isNaN(attackSpeed) || !isFinite(attackSpeed)) {
-                    document.getElementById('result').textContent = 
-                        'Error: Invalid calculation result. Check your inputs.';
-                    document.getElementById('tips').textContent = 
-                        'Tips: Unable to calculate due to invalid result.';
-                    return;
+            });
+            weapon = lookUp[h_type][hw_type]['spd'];
+            const furyButtons = document.querySelectorAll('.fury-btn-group .btn');
+            let fury = 0;
+            furyButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    fury = parseFloat(btn.getAttribute('data-value'));
                 }
-
-                // Display current attack speed
-                document.getElementById('result').textContent = 
-                    `Calculated Attack Speed: ${attackSpeed.toFixed(2)}`;
-
-                // Calculate additional % needed or to remove for attack speed of 0.25
-                const targetAttackSpeed = 0.25;
-                const requiredTotalBonusPercent = 100 * (1 - (targetAttackSpeed * quickenTrait) / baseAttackSpeed);
-                const otherBonuses = guildBuff + secretTech + hunterStats + hunterCharacteristic + mountEquipTier;
-
-                // Handle edge cases for tips
-                let tipsMessage;
-                if (isNaN(requiredTotalBonusPercent) || !isFinite(requiredTotalBonusPercent)) {
-                    tipsMessage = 'Tips: Unable to achieve 0.25 attack speed with current settings.';
-                } else if (attackSpeed <= targetAttackSpeed) {
-                    // Calculate current totalBonusPercent
-                    const currentTotalBonusPercent = 100 * (1 - (attackSpeed * quickenTrait) / baseAttackSpeed);
-                    const removeEquipmentBonus = currentTotalBonusPercent - requiredTotalBonusPercent;
-                    if (Math.abs(removeEquipmentBonus) < 0.1) {
-                        tipsMessage = 'Tips: Current settings achieve an attack speed very close to 0.25.';
-                    } else {
-                        tipsMessage = `Reduce Equipment Bonus by ${removeEquipmentBonus.toFixed(1)}%, you already reached the max cap of 0.25 attack speed.`;
-                    }
-                } else {
-                    const additionalEquipmentBonus = requiredTotalBonusPercent - otherBonuses;
-                    if (additionalEquipmentBonus < 0.1) {
-                        tipsMessage = 'Tips: Increase Equipment Bonus by less than 0.1% to achieve 0.25 attack speed.';
-                    } else {
-                        tipsMessage = `Tips: Increase Equipment Bonus by ${additionalEquipmentBonus.toFixed(1)}% to achieve 0.25 attack speed.`;
-                    }
+            });
+            const guildButtons = document.querySelectorAll('.guild-btn-group .btn');
+            let guild = 0;
+            guildButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    guild = parseFloat(btn.getAttribute('data-value'));
                 }
-
-                document.getElementById('tips').textContent = tipsMessage;
-            } catch (error) {
-                console.error('Calculation error:', error);
-                document.getElementById('result').textContent = 
-                    'Error: An unexpected error occurred. Please check your inputs.';
-                document.getElementById('tips').textContent = 
-                    'Tips: Unable to calculate due to an unexpected error.';
+            });
+            let s_tech = parseFloat(document.getElementById("sTech").value) || 0;
+            if (s_tech > 10) s_tech = 10;
+            if (s_tech < 0) s_tech = 0;
+            equip_bonus = parseFloat(document.getElementById("eBonus").value) || 0;
+            const statButtons = document.querySelectorAll('.stat-btn-group .btn');
+            let hunter_stat = 0;
+            statButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    hunter_stat = parseFloat(btn.getAttribute('data-value'));
+                }
+            });
+            const charButtons = document.querySelectorAll('.char-btn-group .btn');
+            let hunter_char = 0;
+            charButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    hunter_char = parseFloat(btn.getAttribute('data-value'));
+                }
+            });
+            const quickButtons = document.querySelectorAll('.quick-btn-group .btn');
+            let hunter_trait = 1;
+            quickButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    hunter_trait = parseFloat(btn.getAttribute('data-value'));
+                }
+            });
+            const mountButtons = document.querySelectorAll('.mount-btn-group .btn');
+            let mount_bonus = 0;
+            mountButtons.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    mount_bonus = parseFloat(btn.getAttribute('data-value'));
+                }
+            });
+            step_1 = parseFloat(guild) + parseFloat(s_tech) + parseFloat(equip_bonus) + parseFloat(hunter_stat) + parseFloat(hunter_char) + parseFloat(mount_bonus);
+            step_2 = parseFloat(step_1 / 100);
+            step_3 = 1 - step_2;
+            step_4 = weapon * step_3;
+            atk_spd = Number((step_4 / hunter_trait).toFixed(2));
+            atk_spd_fury = Number((step_4 / (fury + (hunter_trait && hunter_trait - 1))).toFixed(2));
+            total_atk_spd_needed_no_fury = 1 - (hunter_trait / (4 * weapon));
+            total_atk_spd_needed_with_fury = 1 - (((hunter_trait && hunter_trait - 1) + fury) / (4 * weapon));
+            atk_spd_needed = total_atk_spd_needed_no_fury - step_2;
+            atk_spd_needed_with_fury = total_atk_spd_needed_with_fury - step_2;
+            if (fury > 0 && (h_type == "berserker" || h_type == "sorcerer")) {
+                document.getElementById("result").innerHTML = `Your attack speed will be.. <br><b>WITH FURY</b>: ${(Math.floor(atk_spd_fury * 100) / 100)}<br><i>${(atk_spd_needed_with_fury * 100).toFixed(1)}% +ATKSPD% needed to reach .25 with fury</i><br> <b>WITHOUT FURY</b>: ${atk_spd}<br><i>${(atk_spd_needed * 100).toFixed(1)}% +ATKSPD% needed to reach .25 without fury</i>`;
+            } else if (atk_spd >= 0.25) {
+                document.getElementById("result").innerHTML = `Attack Speed will be: ${atk_spd}<br><i>${(atk_spd_needed * 100).toFixed(1)}% +ATKSPD% needed to reach .25</i>`;
+            } else {
+                document.getElementById("result").innerHTML = `<i>Consider removing ${(atk_spd_needed * -100).toFixed(1)}% +ATKSPD%</i>, the max is 0.25 and you have: ${atk_spd}`;
             }
         }
 
-        // Recalculate on input change
-        const inputs = document.querySelectorAll('#attackSpeedForm input, #attackSpeedForm select');
-        inputs.forEach(input => {
-            input.addEventListener('change', calculateAttackSpeed);
-        });
-
-        // Initial calculation with default values
-        calculateAttackSpeed();
+        function selectOption(group, type, value) {
+            const buttons = document.querySelectorAll(`.${group} .btn`);
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-type') === type) {
+                    btn.classList.add('active');
+                }
+            });
+            if (group === 'hunter-btn-group') {
+                const hunterType = type;
+                const furyButtons = document.querySelectorAll('.fury-btn-group .btn');
+                furyButtons.forEach(btn => {
+                    const furyType = btn.getAttribute('data-type');
+                    if (hunterType === 'berserker') {
+                        btn.disabled = false; // Enable all fury levels for Berserker
+                    } else if (hunterType === 'sorcerer') {
+                        // Enable only Lv. 0 and Lv. 1 for Sorcerer
+                        btn.disabled = !(furyType === 'fury-0' || furyType === 'fury-1');
+                        // If a higher level is active, reset to Lv. 0
+                        if (btn.classList.contains('active') && furyType !== 'fury-0' && furyType !== 'fury-1') {
+                            btn.classList.remove('active');
+                            document.querySelector('.fury-btn-group .btn[data-type="fury-0"]').classList.add('active');
+                        }
+                    } else {
+                        // Disable all fury buttons for other hunter types
+                        btn.disabled = true;
+                        if (btn.classList.contains('active')) {
+                            document.querySelector('.fury-btn-group .btn[data-type="fury-0"]').classList.add('active');
+                        }
+                    }
+                });
+            }
+            calcATKSPD();
+        }
     </script>
+</head>
+<body>
+    <div class="discord-link">
+        <a href="https://discord.gg/z9CQtZWV" target="_blank">EHT Guides, Tips and Tricks on Discord</a>
+    </div>
+    <div class="calculator-card bg-light">
+        <h4>Attack Speed Calculator</h4>
+        <form id="eCalc">
+            <div id="container" class="hunter-type-container">
+                <div>
+                    <label for="hType" id="label" class="form-label">Hunter Type</label>
+                </div>
+                <div class="hunter-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-berserker active" data-type="berserker" onclick="selectOption('hunter-btn-group', 'berserker', null)">Berserker</button>
+                    <button type="button" class="btn btn-paladin" data-type="paladin" onclick="selectOption('hunter-btn-group', 'paladin', null)">Paladin</button>
+                    <button type="button" class="btn btn-ranger" data-type="ranger" onclick="selectOption('hunter-btn-group', 'ranger', null)">Ranger</button>
+                    <button type="button" class="btn btn-sorcerer" data-type="sorcerer" onclick="selectOption('hunter-btn-group', 'sorcerer', null)">Sorcerer</button>
+                </div>
+            </div>
+            <div id="container">
+                <div><label id="label" for="hWeaponType" class="form-label">Weapon Type</label></div>
+                <div class="weapon-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-weapon-pvp active" data-type="pvp" onclick="selectOption('weapon-btn-group', 'pvp', null)">PVP/World Boss</button>
+                    <button type="button" class="btn btn-weapon-ancient" data-type="ancient" onclick="selectOption('weapon-btn-group', 'ancient', null)">Ancient/Primal/Original</button>
+                </div>
+            </div>
+            <div id="container">
+                <div><label id="label" for="fury" class="form-label">Fury Lv.</label></div>
+                <div class="fury-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-fury-0 active" data-type="fury-0" data-value="0" onclick="selectOption('fury-btn-group', 'fury-0', 0)">Lv. 0</button>
+                    <button type="button" class="btn btn-fury-1" data-type="fury-1" data-value="2.38" onclick="selectOption('fury-btn-group', 'fury-1', 2.38)">Lv. 1</button>
+                    <button type="button" class="btn btn-fury-2" data-type="fury-2" data-value="4" onclick="selectOption('fury-btn-group', 'fury-2', 4)">Lv. 10</button>
+                    <button type="button" class="btn btn-fury-3" data-type="fury-3" data-value="4.18" onclick="selectOption('fury-btn-group', 'fury-3', 4.18)">Lv. 11</button>
+                    <button type="button" class="btn btn-fury-4" data-type="fury-4" data-value="4.36" onclick="selectOption('fury-btn-group', 'fury-4', 4.36)">Lv. 12</button>
+                    <button type="button" class="btn btn-fury-5" data-type="fury-5" data-value="4.54" onclick="selectOption('fury-btn-group', 'fury-5', 4.54)">Lv. 13</button>
+                </div>
+            </div>
+            <div id="container">
+                <div><label id="label" for="guild" class="form-label">Guild ATK SPD Buff</label></div>
+                <div class="guild-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-fury-0 active" data-type="guild-0" data-value="0" onclick="selectOption('guild-btn-group', 'guild-0', 0)">0%</button>
+                    <button type="button" class="btn btn-fury-1" data-type="guild-1" data-value="1" onclick="selectOption('guild-btn-group', 'guild-1', 1)">1%</button>
+                    <button type="button" class="btn btn-fury-2" data-type="guild-2" data-value="2" onclick="selectOption('guild-btn-group', 'guild-2', 2)">2%</button>
+                    <button type="button" class="btn btn-fury-3" data-type="guild-3" data-value="3" onclick="selectOption('guild-btn-group', 'guild-3', 3)">3%</button>
+                    <button type="button" class="btn btn-fury-4" data-type="guild-4" data-value="4" onclick="selectOption('guild-btn-group', 'guild-4', 4)">4%</button>
+                    <button type="button" class="btn btn-fury-5" data-type="guild-5" data-value="5" onclick="selectOption('guild-btn-group', 'guild-5', 5)">5%</button>
+                </div>
+            </div>
+            <div style="border: none;" class="number-input">
+                <label for="sTech" class="form-label" style="width: 185px;">Secret Tech ATK SPD %</label>
+                <input type="number" step="0.1" min="0" max="10" class="form-control quantity" id="sTech" name="sTech" value="10" oninput="calcATKSPD()">
+                <label for="sTech" class="form-label" style="width: 185px;padding-left: 3%;">(Lv100:10%):</label>
+            </div>
+            <div style="border: none;" class="number-input">
+                <label for="eBonus" class="form-label" style="width: 190px;">Equipment Bonus %</label>
+                <input type="number" step="0.1" min="0" max="10" class="form-control quantity" id="eBonus" name="eBonus" value="10" oninput="calcATKSPD()">
+            </div>
+            <div id="container" style="margin-top: 3%;">
+                <div><label id="label" for="hStat" class="form-label">Hunter Stat</label></div>
+                <div class="stat-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-stat-0 active" data-type="stat-0" data-value="0" onclick="selectOption('stat-btn-group', 'stat-0', 0)">White/Grey</button>
+                    <button type="button" class="btn btn-stat-10" data-type="stat-10" data-value="10" onclick="selectOption('stat-btn-group', 'stat-10', 10)">Blue</button>
+                    <button type="button" class="btn btn-stat-20" data-type="stat-20" data-value="20" onclick="selectOption('stat-btn-group', 'stat-20', 20)">Orange</button>
+                    <button type="button" class="btn btn-stat-30" data-type="stat-30" data-value="30" onclick="selectOption('stat-btn-group', 'stat-30', 30)">Purple</button>
+                </div>
+            </div>
+            <div id="container">
+                <div><label id="label" for="hChar" class="form-label">Hunter Characteristic</label></div>
+                <div class="char-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-char-0 active" data-type="char-0" data-value="0" onclick="selectOption('char-btn-group', 'char-0', 0)">Other</button>
+                    <button type="button" class="btn btn-char-7" data-type="char-7" data-value="7" onclick="selectOption('char-btn-group', 'char-7', 7)">Heroic</button>
+                    <button type="button" class="btn btn-char-10" data-type="char-10" data-value="10" onclick="selectOption('char-btn-group', 'char-10', 10)">Swift</button>
+                    <button type="button" class="btn btn-char--10" data-type="char--10" data-value="-10" onclick="selectOption('char-btn-group', 'char--10', -10)">Thickheaded</button>
+                </div>
+            </div>
+            <div id="container">
+                <div><label id="label" for="hQuick" class="form-label">Hunter Quicken Trait</label></div>
+                <div class="quick-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-quick-1 active" data-type="quick-1" data-value="1" onclick="selectOption('quick-btn-group', 'quick-1', 1)">0</button>
+                    <button type="button" class="btn btn-quick-1_1" data-type="quick-1_1" data-value="1.1" onclick="selectOption('quick-btn-group', 'quick-1_1', 1.1)">1</button>
+                    <button type="button" class="btn btn-quick-1_2" data-type="quick-1_2" data-value="1.2" onclick="selectOption('quick-btn-group', 'quick-1_2', 1.2)">2</button>
+                    <button type="button" class="btn btn-quick-1_3" data-type="quick-1_3" data-value="1.3" onclick="selectOption('quick-btn-group', 'quick-1_3', 1.3)">3</button>
+                    <button type="button" class="btn btn-quick-1_4" data-type="quick-1_4" data-value="1.4" onclick="selectOption('quick-btn-group', 'quick-1_4', 1.4)">4</button>
+                    <button type="button" class="btn btn-quick-1_5" data-type="quick-1_5" data-value="1.5" onclick="selectOption('quick-btn-group', 'quick-1_5', 1.5)">5</button>
+                </div>
+            </div>
+            <div id="container">
+                <div><label id="label" for="mount" class="form-label">Mount Equip Tier</label></div>
+                <div class="mount-btn-group btn-group" role="group">
+                    <button type="button" class="btn btn-mount-0 active" data-type="mount-0" data-value="0" onclick="selectOption('mount-btn-group', 'mount-0', 0)">None</button>
+                    <button type="button" class="btn btn-mount-6" data-type="mount-6" data-value="6" onclick="selectOption('mount-btn-group', 'mount-6', 6)">B (6%)</button>
+                    <button type="button" class="btn btn-mount-9" data-type="mount-9" data-value="9" onclick="selectOption('mount-btn-group', 'mount-9', 9)">A (9%)</button>
+                    <button type="button" class="btn btn-mount-12" data-type="mount-12" data-value="12" onclick="selectOption('mount-btn-group', 'mount-12', 12)">S (12%)</button>
+                </div>
+            </div>
+            <div class="result-card" id="result">
+                Your attack speed will be.. <br>
+                <b>WITH FURY</b>: 0.83<br>
+                <i>63.0% +ATKSPD% needed to reach .25 with fury</i><br>
+                <b>WITHOUT FURY</b>: 1.98<br>
+                <i>78.6% +ATKSPD% needed to reach .25 without fury</i>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>
